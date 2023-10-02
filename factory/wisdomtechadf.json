@@ -1,0 +1,9 @@
+{
+	"name": "wisdomtechadf",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "fc5e09ae-bc9b-4072-89e4-7389cf4932bc",
+		"tenantId": "bce8d41b-19e4-4270-88dc-a080cbfdef92"
+	}
+}
