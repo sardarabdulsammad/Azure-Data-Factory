@@ -1,0 +1,57 @@
+{
+	"name": "AzureSqlTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_tables",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "run_id",
+				"type": "varchar"
+			},
+			{
+				"name": "run_start",
+				"type": "varchar"
+			},
+			{
+				"name": "pipeline_name",
+				"type": "varchar"
+			},
+			{
+				"name": "workspace_name",
+				"type": "varchar"
+			},
+			{
+				"name": "path",
+				"type": "varchar"
+			},
+			{
+				"name": "table_name",
+				"type": "varchar"
+			},
+			{
+				"name": "file_name",
+				"type": "varchar"
+			},
+			{
+				"name": "src_no_records",
+				"type": "varchar"
+			},
+			{
+				"name": "tgt_no_records",
+				"type": "varchar"
+			},
+			{
+				"name": "layer_status",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Ingestion_history"
+		}
+	}
+}
