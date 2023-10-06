@@ -455,7 +455,7 @@
 										},
 										"ifFalseActivities": [
 											{
-												"name": "Copy data1_copy1",
+												"name": "Copy _data_full_load",
 												"type": "Copy",
 												"dependsOn": [],
 												"policy": {
@@ -519,7 +519,14 @@
 											{
 												"name": "Copy data2",
 												"type": "Copy",
-												"dependsOn": [],
+												"dependsOn": [
+													{
+														"activity": "Copy _data_full_load",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
 												"policy": {
 													"timeout": "0.12:00:00",
 													"retry": 0,
@@ -532,7 +539,7 @@
 													"source": {
 														"type": "AzureSqlSource",
 														"sqlReaderQuery": {
-															"value": "select \n'@{pipeline().RunId}' as run_id,\n'@{pipeline().TriggerTime}' as run_start,\n'@{pipeline().Pipeline}' as pipeline_name,\n'@{pipeline().DataFactory}' as workspace_name,\n'@{item().path}' as path,\n'@{item().table_name}' as table_name,\n'@{concat(item().schema_name,'_',item().table_name,'_',variables('utc'),'.parquet')}' as file_name,\n",
+															"value": "select \n'@{pipeline().RunId}' as run_id,\n'@{pipeline().TriggerTime}' as run_start,\n'@{pipeline().Pipeline}' as pipeline_name,\n'@{pipeline().DataFactory}' as workspace_name,\n'@{item().path}' as path,\n'@{item().table_name}' as table_name,\n'@{concat(item().schema_name,'_',item().table_name,'_',variables('utc'),'.parquet')}' as file_name,\n'@{activity('Copy _data_full_load').output.rowsRead}'as src_no_records,\n'@{activity('Copy _data_full_load').output.rowsCopied}' as tgt_no_records,\n'staged' as layer_status\n",
 															"type": "Expression"
 														},
 														"queryTimeout": "02:00:00",
@@ -625,7 +632,7 @@
 														"parameters": {
 															"folder": "@item().path",
 															"file": {
-																"value": "@concat(item().schema_name,'_',item().table_name,'_',utcNow(),'.parquet')",
+																"value": "@concat(item().schema_name,'_',item().table_name,'_',variables('utc'),'.parquet')",
 																"type": "Expression"
 															}
 														}
@@ -703,6 +710,65 @@
 													],
 													"scriptBlockExecutionTimeout": "02:00:00"
 												}
+											},
+											{
+												"name": "Copy data3",
+												"type": "Copy",
+												"dependsOn": [
+													{
+														"activity": "Script1",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "AzureSqlSource",
+														"sqlReaderQuery": {
+															"value": "select \n'@{pipeline().RunId}' as run_id,\n'@{pipeline().TriggerTime}' as run_start,\n'@{pipeline().Pipeline}' as pipeline_name,\n'@{pipeline().DataFactory}' as workspace_name,\n'@{item().path}' as path,\n'@{item().table_name}' as table_name,\n'@{concat(item().schema_name,'_',item().table_name,'_',variables('utc'),'.parquet')}' as file_name,\n'@{activity('Copy data1').output.rowsRead}'as src_no_records,\n'@{activity('Copy data1').output.rowsCopied}' as tgt_no_records,\n'staged' as layer_status\n",
+															"type": "Expression"
+														},
+														"queryTimeout": "02:00:00",
+														"partitionOption": "None"
+													},
+													"sink": {
+														"type": "AzureSqlSink",
+														"writeBehavior": "insert",
+														"sqlWriterUseTableLock": false
+													},
+													"enableStaging": false,
+													"translator": {
+														"type": "TabularTranslator",
+														"typeConversion": true,
+														"typeConversionSettings": {
+															"allowDataTruncation": true,
+															"treatBooleanAsNumber": false
+														}
+													}
+												},
+												"inputs": [
+													{
+														"referenceName": "AzureSqlTable1",
+														"type": "DatasetReference",
+														"parameters": {}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "AzureSqlTable1",
+														"type": "DatasetReference",
+														"parameters": {}
+													}
+												]
 											}
 										]
 									}
