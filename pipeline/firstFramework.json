@@ -242,7 +242,8 @@
 											"dataset": {
 												"referenceName": "ds_frame_maxquery",
 												"type": "DatasetReference"
-											}
+											},
+											"firstRowOnly": false
 										}
 									},
 									{
@@ -279,7 +280,7 @@
 												{
 													"type": "Query",
 													"text": {
-														"value": "update [dbo].[CNTLTBL] set \r\nCurrent_value = '@{activity('Lookup1').output.value[0].maxvalue}',Previous_value = '@{item().Current_value}' where table_name = '@{item().table_name}",
+														"value": "update [dbo].[CNTLTBL] set \nCurrent_value = '@{activity('Lookup1').output.value[0].maxvalue}',Previous_value = '@{item().Current_value}' where table_name = '@{item().table_name}'",
 														"type": "Expression"
 													}
 												}
