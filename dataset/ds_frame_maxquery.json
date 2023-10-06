@@ -1,0 +1,12 @@
+{
+	"name": "ds_frame_maxquery",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_tables",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
