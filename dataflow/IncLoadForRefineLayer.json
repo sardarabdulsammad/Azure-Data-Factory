@@ -1,5 +1,5 @@
 {
-	"name": "FullLoadForRefineLayer",
+	"name": "IncLoadForRefineLayer",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -43,21 +43,20 @@
 				"          Modified_Date = currentTimestamp(),",
 				"          Created_by = $created,",
 				"          Modified_by = $modified) ~> derivedColumn1",
-				"derivedColumn1 alterRow(insertIf(1 == 1)) ~> alterRow1",
+				"derivedColumn1 alterRow(upsertIf(1 == 1)) ~> alterRow1",
 				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'delta',",
 				"     container: 'output',",
 				"     folderPath: ($Folder),",
-				"     overwrite: true,",
 				"     mergeSchema: false,",
 				"     autoCompact: false,",
 				"     optimizedWrite: false,",
 				"     vacuum: 0,",
 				"     deletable: false,",
-				"     insertable: true,",
+				"     insertable: false,",
 				"     updateable: false,",
-				"     upsertable: false,",
+				"     upsertable: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
