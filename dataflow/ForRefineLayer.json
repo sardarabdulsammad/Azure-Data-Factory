@@ -1,0 +1,41 @@
+{
+	"name": "ForRefineLayer",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ParquetSink",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "alterRow1"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     created as string,",
+				"     modified as string",
+				"}",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> source1",
+				"source1 derive(Created_Date = currentTimestamp(),",
+				"          Modified_Date = currentTimestamp(),",
+				"          Created_by = $created,",
+				"          Modified_by = $modified) ~> derivedColumn1",
+				"derivedColumn1 alterRow() ~> alterRow1"
+			]
+		}
+	}
+}
