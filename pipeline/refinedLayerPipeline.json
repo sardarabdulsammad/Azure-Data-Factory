@@ -41,6 +41,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup1').output.value",
+						"type": "Expression"
+					},
 					"activities": [
 						{
 							"name": "IncLoadForRefineLayer",
@@ -57,7 +61,37 @@
 							"typeProperties": {
 								"dataflow": {
 									"referenceName": "IncLoadForRefineLayer",
-									"type": "DataFlowReference"
+									"type": "DataFlowReference",
+									"parameters": {
+										"created": {
+											"value": "'@{pipeline().Pipeline}'",
+											"type": "Expression"
+										},
+										"modified": {
+											"value": "'@{pipeline().Pipeline}'",
+											"type": "Expression"
+										},
+										"Folder": {
+											"value": "'@{item().path\n}'",
+											"type": "Expression"
+										},
+										"pk": {
+											"value": "'@{item().pk\n}'",
+											"type": "Expression"
+										}
+									},
+									"datasetParameters": {
+										"source1": {
+											"folder": {
+												"value": "@item().path",
+												"type": "Expression"
+											},
+											"file": {
+												"value": "@item().file_name",
+												"type": "Expression"
+											}
+										}
+									}
 								},
 								"compute": {
 									"coreCount": 8,

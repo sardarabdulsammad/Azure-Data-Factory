@@ -58,6 +58,7 @@
 				"     insertable: false,",
 				"     updateable: false,",
 				"     upsertable: true,",
+				"     keys:[($pk)],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
