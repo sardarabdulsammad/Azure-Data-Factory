@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"linkedService": {
-						"referenceName": "AzureBlobStorage2",
+						"referenceName": "ls_sink_delta",
 						"type": "LinkedServiceReference"
 					},
 					"name": "sink1"
@@ -49,7 +49,6 @@
 				"     validateSchema: false,",
 				"     format: 'delta',",
 				"     container: 'output',",
-				"     folderPath: ($Folder),",
 				"     mergeSchema: false,",
 				"     autoCompact: false,",
 				"     optimizedWrite: false,",
