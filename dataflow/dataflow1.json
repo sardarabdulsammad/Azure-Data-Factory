@@ -1,0 +1,70 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ParquetSink",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "ls_sink_delta",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          EmpCode as integer,",
+				"          EmpFName as string,",
+				"          EmpLName as string,",
+				"          Job as string,",
+				"          Manager as string,",
+				"          HireDate as date,",
+				"          Salary as integer,",
+				"          Commission as integer,",
+				"          DEPTCODE as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> source1",
+				"source1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     container: 'output',",
+				"     folderPath: 'test',",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     upsertable: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          EmpCode,",
+				"          EmpFName,",
+				"          EmpLName,",
+				"          Job,",
+				"          Manager,",
+				"          HireDate,",
+				"          Salary,",
+				"          Commission,",
+				"          DEPTCODE",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
