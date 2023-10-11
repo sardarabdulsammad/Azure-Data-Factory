@@ -34,7 +34,7 @@
 				"     created as string,",
 				"     modified as string,",
 				"     Folder as string,",
-				"     pk as string",
+				"     pk as string[]",
 				"}",
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
