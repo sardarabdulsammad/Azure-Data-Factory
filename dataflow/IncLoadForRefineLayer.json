@@ -49,7 +49,7 @@
 				"     validateSchema: false,",
 				"     format: 'delta',",
 				"     container: 'output',",
-				"     folderPath: ($Folder),",
+				"     folderPath: 'new',",
 				"     mergeSchema: false,",
 				"     autoCompact: false,",
 				"     optimizedWrite: false,",

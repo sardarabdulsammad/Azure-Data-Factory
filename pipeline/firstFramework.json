@@ -427,7 +427,7 @@
 				"typeProperties": {
 					"variableName": "utc",
 					"value": {
-						"value": "@utcnow()",
+						"value": "@substring(string(pipeline().TriggerTime),0,lastindexof(string(pipeline().TriggerTime),'.'))",
 						"type": "Expression"
 					}
 				}
