@@ -48,7 +48,7 @@
 				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'delta',",
-				"     container: 'delta',",
+				"     container: 'deltaa',",
 				"     folderPath: ($Folder),",
 				"     mergeSchema: false,",
 				"     autoCompact: false,",
