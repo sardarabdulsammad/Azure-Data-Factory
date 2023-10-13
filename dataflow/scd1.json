@@ -34,6 +34,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_emp_tgt",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
 				}
 			],
 			"transformations": [
@@ -60,6 +67,9 @@
 				},
 				{
 					"name": "alterRow1"
+				},
+				{
+					"name": "derivedColumn3"
 				}
 			],
 			"scriptLines": [
@@ -146,6 +156,7 @@
 				"     broadcast: 'auto')~> join1",
 				"join1 derive(EMPSK = sk+maxsk) ~> derivedColumn2",
 				"derivedColumn2 alterRow(insertIf(1==1)) ~> alterRow1",
+				"Update derive(updateT = currentTimestamp()) ~> derivedColumn3",
 				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -186,7 +197,34 @@
 				"          CreatedDate = derivedColumn1@createddate,",
 				"          ModifiedDate = ModifyDate,",
 				"          EMPSK",
-				"     )) ~> sink1"
+				"     )) ~> sink1",
+				"derivedColumn3 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EmpCode as integer,",
+				"          EmpFName as string,",
+				"          EmpLName as string,",
+				"          Job as string,",
+				"          Manager as string,",
+				"          HireDate as date,",
+				"          Salary as integer,",
+				"          Commission as integer,",
+				"          DEPTCODE as integer,",
+				"          CreatedDate as timestamp,",
+				"          ModifiedDate as timestamp,",
+				"          EFStartDate as timestamp,",
+				"          EFEndDate as timestamp,",
+				"          IsActive as string,",
+				"          EMPSK as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink2"
 			]
 		}
 	}
