@@ -43,6 +43,9 @@
 				},
 				{
 					"name": "surrogateKey1"
+				},
+				{
+					"name": "join1"
 				}
 			],
 			"scriptLines": [
@@ -121,7 +124,12 @@
 				"          ModifiedDate = currentTimestamp()) ~> derivedColumn1",
 				"derivedColumn1 keyGenerate(output(sk as long),",
 				"     startAt: 1L,",
-				"     stepValue: 1L) ~> surrogateKey1"
+				"     stepValue: 1L) ~> surrogateKey1",
+				"surrogateKey1, maxsk join(1==1,",
+				"     joinType:'cross',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1"
 			]
 		}
 	}
