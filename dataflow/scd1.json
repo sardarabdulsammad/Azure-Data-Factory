@@ -66,10 +66,10 @@
 					"name": "derivedColumn2"
 				},
 				{
-					"name": "alterRow1"
+					"name": "derivedColumn3"
 				},
 				{
-					"name": "derivedColumn3"
+					"name": "alterRow1"
 				}
 			],
 			"scriptLines": [
@@ -155,8 +155,8 @@
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join1",
 				"join1 derive(EMPSK = sk+maxsk) ~> derivedColumn2",
-				"derivedColumn2 alterRow(insertIf(1==1)) ~> alterRow1",
 				"Update derive(updateT = currentTimestamp()) ~> derivedColumn3",
+				"derivedColumn2 alterRow(insertIf(1==1)) ~> alterRow1",
 				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
