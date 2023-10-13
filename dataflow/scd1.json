@@ -70,6 +70,9 @@
 				},
 				{
 					"name": "alterRow1"
+				},
+				{
+					"name": "alterRow2"
 				}
 			],
 			"scriptLines": [
@@ -131,11 +134,7 @@
 				"     && sourceEMP@HireDate == target@HireDate",
 				"     && sourceEMP@Salary == target@Salary",
 				"     && sourceEMP@Commission == target@Commission",
-				"     && sourceEMP@DEPTCODE == target@DEPTCODE",
-				"     && sourceEMP@CreatedDate == target@CreatedDate",
-				"     && sourceEMP@ModifiedDate == target@ModifiedDate",
-				"     && sourceEMP@EFStartDate == target@EFStartDate",
-				"     && sourceEMP@EFEndDate == target@EFEndDate,",
+				"     && sourceEMP@DEPTCODE == target@DEPTCODE,",
 				"     negate:true,",
 				"     broadcast: 'auto')~> exists1",
 				"exists1, target exists(sourceEMP@EmpCode == target@EmpCode,",
@@ -157,6 +156,7 @@
 				"join1 derive(EMPSK = sk+maxsk) ~> derivedColumn2",
 				"Update derive(updateT = currentTimestamp()) ~> derivedColumn3",
 				"derivedColumn2 alterRow(insertIf(1==1)) ~> alterRow1",
+				"derivedColumn3 alterRow(updateIf(1==1)) ~> alterRow2",
 				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -198,7 +198,7 @@
 				"          ModifiedDate = ModifyDate,",
 				"          EMPSK",
 				"     )) ~> sink1",
-				"derivedColumn3 sink(allowSchemaDrift: true,",
+				"alterRow2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          EmpCode as integer,",
@@ -218,13 +218,26 @@
 				"          EMPSK as integer",
 				"     ),",
 				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
 				"     upsertable:false,",
+				"     keys:['EmpCode'],",
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink2"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          EmpCode,",
+				"          EmpFName,",
+				"          EmpLName,",
+				"          Job,",
+				"          Manager,",
+				"          HireDate,",
+				"          Salary,",
+				"          Commission,",
+				"          DEPTCODE,",
+				"          ModifiedDate = updateT",
+				"     )) ~> sink2"
 			]
 		}
 	}
