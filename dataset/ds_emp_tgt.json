@@ -1,0 +1,90 @@
+{
+	"name": "ds_emp_tgt",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_tables",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "EmpCode",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "EmpFName",
+				"type": "varchar"
+			},
+			{
+				"name": "EmpLName",
+				"type": "varchar"
+			},
+			{
+				"name": "Job",
+				"type": "varchar"
+			},
+			{
+				"name": "Manager",
+				"type": "char"
+			},
+			{
+				"name": "HireDate",
+				"type": "date"
+			},
+			{
+				"name": "Salary",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Commission",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DEPTCODE",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CreatedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ModifiedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "EFStartDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "EFEndDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "IsActive",
+				"type": "char"
+			},
+			{
+				"name": "EMPSK",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "EMPLOYEE"
+		}
+	}
+}

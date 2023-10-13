@@ -27,7 +27,15 @@
 					"name": "maxsk"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_emp_tgt",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "exists1"
@@ -46,6 +54,12 @@
 				},
 				{
 					"name": "join1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "alterRow1"
 				}
 			],
 			"scriptLines": [
@@ -121,7 +135,7 @@
 				"     negate:true,",
 				"     broadcast: 'auto')~> existsInsert",
 				"existsInsert derive(createddate = currentTimestamp(),",
-				"          ModifiedDate = currentTimestamp()) ~> derivedColumn1",
+				"          ModifyDate = currentTimestamp()) ~> derivedColumn1",
 				"derivedColumn1 keyGenerate(output(sk as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
@@ -129,7 +143,50 @@
 				"     joinType:'cross',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1"
+				"     broadcast: 'auto')~> join1",
+				"join1 derive(EMPSK = sk+maxsk) ~> derivedColumn2",
+				"derivedColumn2 alterRow(insertIf(1==1)) ~> alterRow1",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EmpCode as integer,",
+				"          EmpFName as string,",
+				"          EmpLName as string,",
+				"          Job as string,",
+				"          Manager as string,",
+				"          HireDate as date,",
+				"          Salary as integer,",
+				"          Commission as integer,",
+				"          DEPTCODE as integer,",
+				"          CreatedDate as timestamp,",
+				"          ModifiedDate as timestamp,",
+				"          EFStartDate as timestamp,",
+				"          EFEndDate as timestamp,",
+				"          IsActive as string,",
+				"          EMPSK as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          EmpCode,",
+				"          EmpFName,",
+				"          EmpLName,",
+				"          Job,",
+				"          Manager,",
+				"          HireDate,",
+				"          Salary,",
+				"          Commission,",
+				"          DEPTCODE,",
+				"          CreatedDate = derivedColumn1@createddate,",
+				"          ModifiedDate = ModifyDate,",
+				"          EMPSK",
+				"     )) ~> sink1"
 			]
 		}
 	}
