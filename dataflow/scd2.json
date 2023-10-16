@@ -153,7 +153,7 @@
 				"existsInsert derive(createddate_ = currentTimestamp(),",
 				"          ModifyDate_ = currentTimestamp(),",
 				"          EFStartDate_ = currentTimestamp(),",
-				"          EFEndDate_ = toTimestamp('12-31-1999'),",
+				"          EFEndDate_ = toTimestamp('9999-12-31'),",
 				"          Is_Active = 'Y') ~> derivedColumn1",
 				"derivedColumn1 keyGenerate(output(sk as long),",
 				"     startAt: 1L,",
