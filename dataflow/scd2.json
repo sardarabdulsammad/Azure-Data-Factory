@@ -1,0 +1,244 @@
+{
+	"name": "scd2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					},
+					"name": "sourceEMP",
+					"description": "Import data from SourceEmployee"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					},
+					"name": "target"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					},
+					"name": "maxsk"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_emp_tgt",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_emp_tgt",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "exists1"
+				},
+				{
+					"name": "Update"
+				},
+				{
+					"name": "existsInsert"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "surrogateKey1"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "derivedColumn3"
+				},
+				{
+					"name": "alterRow1"
+				},
+				{
+					"name": "alterRow2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EmpCode as integer,",
+				"          EmpFName as string,",
+				"          EmpLName as string,",
+				"          Job as string,",
+				"          Manager as string,",
+				"          HireDate as date,",
+				"          Salary as integer,",
+				"          Commission as integer,",
+				"          DEPTCODE as integer,",
+				"          CreatedDate as timestamp,",
+				"          ModifiedDate as timestamp,",
+				"          EFStartDate as timestamp,",
+				"          EFEndDate as timestamp,",
+				"          IsActive as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'select * from [dbo].[EMPLOYEE_SRC]',",
+				"     format: 'query') ~> sourceEMP",
+				"source(output(",
+				"          EmpCode as integer,",
+				"          EmpFName as string,",
+				"          EmpLName as string,",
+				"          Job as string,",
+				"          Manager as string,",
+				"          HireDate as date,",
+				"          Salary as integer,",
+				"          Commission as integer,",
+				"          DEPTCODE as integer,",
+				"          CreatedDate as timestamp,",
+				"          ModifiedDate as timestamp,",
+				"          EFStartDate as timestamp,",
+				"          EFEndDate as timestamp,",
+				"          IsActive as string,",
+				"          EMPSK as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'select * from [dbo].[EMPLOYEE]',",
+				"     format: 'query') ~> target",
+				"source(output(",
+				"          maxsk as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'select isnull(max(EMPSK),0)as maxsk from [dbo].[EMPLOYEE]',",
+				"     format: 'query') ~> maxsk",
+				"sourceEMP, target exists(sourceEMP@EmpFName == target@EmpFName",
+				"     && sourceEMP@EmpLName == target@EmpLName",
+				"     && sourceEMP@Job == target@Job",
+				"     && sourceEMP@Manager == target@Manager",
+				"     && sourceEMP@HireDate == target@HireDate",
+				"     && sourceEMP@Salary == target@Salary",
+				"     && sourceEMP@Commission == target@Commission",
+				"     && sourceEMP@DEPTCODE == target@DEPTCODE,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> exists1",
+				"exists1, target exists(sourceEMP@EmpCode == target@EmpCode,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> Update",
+				"sourceEMP, target exists(sourceEMP@EmpCode == target@EmpCode,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> existsInsert",
+				"existsInsert derive(createddate = currentTimestamp(),",
+				"          ModifyDate = currentTimestamp()) ~> derivedColumn1",
+				"derivedColumn1 keyGenerate(output(sk as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"surrogateKey1, maxsk join(1==1,",
+				"     joinType:'cross',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 derive(EMPSK = sk+maxsk) ~> derivedColumn2",
+				"Update derive(updateT = currentTimestamp()) ~> derivedColumn3",
+				"derivedColumn2 alterRow(insertIf(1==1)) ~> alterRow1",
+				"derivedColumn3 alterRow(updateIf(1==1)) ~> alterRow2",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EmpCode as integer,",
+				"          EmpFName as string,",
+				"          EmpLName as string,",
+				"          Job as string,",
+				"          Manager as string,",
+				"          HireDate as date,",
+				"          Salary as integer,",
+				"          Commission as integer,",
+				"          DEPTCODE as integer,",
+				"          CreatedDate as timestamp,",
+				"          ModifiedDate as timestamp,",
+				"          EFStartDate as timestamp,",
+				"          EFEndDate as timestamp,",
+				"          IsActive as string,",
+				"          EMPSK as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          EmpCode,",
+				"          EmpFName,",
+				"          EmpLName,",
+				"          Job,",
+				"          Manager,",
+				"          HireDate,",
+				"          Salary,",
+				"          Commission,",
+				"          DEPTCODE,",
+				"          CreatedDate = derivedColumn1@createddate,",
+				"          ModifiedDate = ModifyDate,",
+				"          EMPSK",
+				"     )) ~> sink1",
+				"alterRow2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EmpCode as integer,",
+				"          EmpFName as string,",
+				"          EmpLName as string,",
+				"          Job as string,",
+				"          Manager as string,",
+				"          HireDate as date,",
+				"          Salary as integer,",
+				"          Commission as integer,",
+				"          DEPTCODE as integer,",
+				"          CreatedDate as timestamp,",
+				"          ModifiedDate as timestamp,",
+				"          EFStartDate as timestamp,",
+				"          EFEndDate as timestamp,",
+				"          IsActive as string,",
+				"          EMPSK as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['EmpCode'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          EmpCode,",
+				"          EmpFName,",
+				"          EmpLName,",
+				"          Job,",
+				"          Manager,",
+				"          HireDate,",
+				"          Salary,",
+				"          Commission,",
+				"          DEPTCODE,",
+				"          ModifiedDate = updateT",
+				"     )) ~> sink2"
+			]
+		}
+	}
+}
