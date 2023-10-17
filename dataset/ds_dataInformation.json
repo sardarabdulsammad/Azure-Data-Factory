@@ -1,0 +1,29 @@
+{
+	"name": "ds_dataInformation",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_datainfo",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "informationData.json",
+				"fileSystem": "tokyo-olympic-data"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"urlName": {
+					"type": "string"
+				},
+				"sinkName": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
