@@ -11,8 +11,13 @@
 					"referenceName": "AzureKeyVault_pass",
 					"type": "LinkedServiceReference"
 				},
-				"secretName": "password"
+				"secretName": "password",
+				"secretVersion": "500f52ffbbd74165b957f4938a4b8952"
 			}
+		},
+		"connectVia": {
+			"referenceName": "SHIR",
+			"type": "IntegrationRuntimeReference"
 		}
 	}
 }
