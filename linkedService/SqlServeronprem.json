@@ -1,16 +1,23 @@
 {
 	"name": "SqlServeronprem",
-	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"annotations": [],
 		"type": "SqlServer",
 		"typeProperties": {
-			"connectionString": "integrated security=False;data source=DESKTOP-53DRG07;initial catalog=AdventureWorks2017;user id=mrk",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJkMDIxZWVkOS03MzA4LTQ3MmEtYjliZS01YTFjZmM1MDcyM2UiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"connectionString": "Integrated Security=False;Data Source=DESKTOP-53DRG07;Initial Catalog=AdventureWorksLT2017;User ID=mrk",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AzureKeyVault_pass",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "password"
+			}
 		},
 		"connectVia": {
 			"referenceName": "SHIR",
 			"type": "IntegrationRuntimeReference"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
 }
