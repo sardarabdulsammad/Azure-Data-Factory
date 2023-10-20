@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup all tables",
+				"name": "Lookup",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -29,11 +29,11 @@
 				}
 			},
 			{
-				"name": "ForEach table",
+				"name": "ForEachtable",
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Lookup all tables ",
+						"activity": "Lookup",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -42,12 +42,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup all tables ').output.value",
+						"value": "@activity('Lookup').output.value",
 						"type": "Expression"
 					},
 					"activities": [
 						{
-							"name": "Copydata",
+							"name": "Copydata1",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
