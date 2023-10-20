@@ -5,6 +5,14 @@
 			"referenceName": "SqlServeronprem",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"tablename": {
+				"type": "string"
+			},
+			"schemaname": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": [
@@ -47,8 +55,14 @@
 			}
 		],
 		"typeProperties": {
-			"schema": "Sales",
-			"table": "vStoreWithAddresses"
+			"schema": {
+				"value": "@dataset().schemaname",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().tablename",
+				"type": "Expression"
+			}
 		}
 	}
 }
